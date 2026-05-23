@@ -1,0 +1,48 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(25, 26, 21, 0.1);
+    padding: 24px 128px;
+}
+
+.logo{
+    font-family: var(--font-family);
+font-weight: 700;
+font-size: 20px;
+line-height: 120%;
+letter-spacing: -0.02em;
+color: #fc832c;
+}
+
+.span{
+font-weight: 600;
+color: #191a15;
+}
+
+.linkWrapper{
+    display: flex;
+    gap: 130px;
+    align-items: center;
+}
+
+.navWrapper{
+    display: flex;
+    gap: 40px;
+
+}
+
+.navLink{
+font-family: var(--font-family);
+font-weight: 400;
+font-size: 16px;
+line-height: 1.25;
+letter-spacing: -0.01em;
+color: #191a15;
+}
+
+.buttonWrapper{
+    display: flex;
+    gap: 8px;
+}
+

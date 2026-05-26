@@ -4,7 +4,14 @@
     align-items: center;
     border-bottom: 1px solid rgba(25, 26, 21, 0.1);
     padding: 24px 128px;
+    background: #fbfbfb;
+    background-image: radial-gradient(
+        circle at 85% 30%, 
+        rgba(252, 131, 44, 0.1) 0%, 
+        rgba(252, 131, 44, 0) 60%
+    );
 }
+
 
 .logo{
     font-family: var(--font-family);
@@ -46,3 +53,11 @@ color: #191a15;
     gap: 8px;
 }
 
+
+.buttonOutLine{
+    padding: 14px 39px;
+}
+
+.buttonSolid{
+    padding: 14px 40px;
+}

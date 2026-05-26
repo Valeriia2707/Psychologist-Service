@@ -1,0 +1,134 @@
+.homeContainer{
+    padding: 78px 128px 100px;
+    display: flex;
+    gap: 125px;
+    background: #fbfbfb;
+    justify-content: center;
+    background-image: radial-gradient(
+        circle at 85% 30%, 
+        rgba(252, 131, 44, 0.1) 0%, 
+        rgba(252, 131, 44, 0) 60%
+    );
+}
+
+
+.textWrapper{
+    max-width: 595px;
+    display: flex;
+    flex-direction: column;
+}
+
+.heading{
+    margin-top: 48px;
+font-family: var(--font-family);
+font-weight: 600;
+font-size: 80px;
+line-height: 1.02;
+letter-spacing: -0.02em;
+color: #191a15;
+display: block;
+margin-bottom: 20px;
+}
+
+.headingOrange{
+    font-style: italic;
+color: #fc832c;
+}
+
+.text{
+    max-width: 510px;
+    font-family: var(--font-family);
+font-weight: 500;
+font-size: 18px;
+line-height: 1.33;
+letter-spacing: -0.02em;
+color: #191a15;
+display: block;
+margin-bottom: 40px;
+}
+
+.buttonSolid{
+    padding: 18px 50px;
+}
+
+.iconArrow{
+    margin-left: 18px;
+}
+
+.imageWrapper{
+    position: relative;
+}
+
+
+.usersWrapper{
+    position: absolute;
+    right: -38px;
+    top: 38px;
+    transform: rotate(15deg);
+    width: 48px;
+height: 48px;
+background: #FBC75E;
+border-radius: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.questionWrapper{
+     position: absolute;
+     left: -35px;
+     top: 185px;
+    transform: rotate(-15deg);
+    width: 40px;
+height: 40px;
+background: #54be96;
+border-radius: 10px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.iconQuestion{
+    transform: rotate(15deg);
+}
+
+.bannerWrapper{
+    position: absolute;
+    padding: 32px;
+    top: 333px;
+    left: -101px;
+    width: 315px;
+height: 118px;
+background: #fc832c;
+border-radius: 20px;
+display: flex;
+gap: 16px;
+}
+
+.checkWrapper{
+    background: #fbfbfb;
+    border-radius: 13px;
+width: 54px;
+height: 54px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.bannerText{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.imageText{
+font-weight: 400;
+font-size: 14px;
+color: rgba(251, 251, 251, 0.5);
+}
+
+.imageNumbers{
+font-weight: 700;
+font-size: 24px;
+color: #fbfbfb;
+}

@@ -8,8 +8,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant: 'outline' | 'solid' | 'bigger-solid'
 }
 
- const Button = ({children, variant, ...props}: ButtonProps) => {
-    const buttonStyle = `${css.button} ${css[variant]}`
+ const Button = ({className, children, variant, ...props}: ButtonProps) => {
+    const buttonStyle = `${css.button} ${css[variant]} ${className || ''}`
     return (
         <button className={buttonStyle} {...props}>{children}</button>
     )

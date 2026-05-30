@@ -1,0 +1,234 @@
+
+
+.cardWrapper{
+    background: #fbfbfb;
+    border-radius: 24px;
+    display: flex;
+    padding: 24px;
+    gap: 24px;
+}
+
+.imageWrapper{
+border: 2px solid rgba(252, 131, 44, 0.2);
+border-radius: 30px;
+min-width: 120px;
+height: 120px;
+display: flex;
+justify-content: center;
+align-items: center;
+position: relative;
+}
+
+.dott{
+    position: absolute;
+    top: 11px;
+    right: 11px;
+}
+
+.image{
+    border-radius: 15px;
+}
+
+.infoWrapper{
+    display: flex;
+    flex-direction: column;
+}
+
+.firstContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.firstText{
+font-weight: 500;
+font-size: 16px;
+line-height: 1.5;
+color: #8a8a89;
+}
+
+.priceContainer{
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.priceWrapper{
+    display: flex;
+    gap: 32px;
+}
+
+.firstBlock{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.secondBlock{
+    position: relative;
+}
+
+.secondBlock::before{
+    content: "";
+    position: absolute;
+    transform: translateY(-50%);
+background: #191A15;
+opacity: 0.2;
+height: 16px;
+width: 1px;
+left: -16px;
+top: 50%;
+}
+
+.priceSpan{
+    color: #38cd3e;
+}
+
+.iconHeart{
+    fill: none;
+    stroke-width: 2px;
+stroke: #191a15;
+}
+
+.priceText{
+font-weight: 500;
+font-size: 16px;
+line-height: 1.5;
+color: #191a15;
+}
+
+.secondContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.nameText{
+    font-weight: 500;
+font-size: 24px;
+line-height: 1.0;
+color: #191a15;
+}
+
+.detailsWrapper{
+display: flex;
+  flex-wrap: wrap;
+  gap: 8px 4px;
+  max-width: 90%
+}
+
+
+.detailsContainer{
+    display: block;
+    border-radius: 24px;
+padding: 8px 16px;
+background: #f3f3f3;
+font-weight: 500;
+font-size: 16px;
+line-height: 1.5;
+color: #8a8a89;
+}
+
+.badgeValue{
+    color: #191a15;
+}
+
+.thirdContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: flex-start;
+}
+
+.thirdText{
+    font-weight: 400;
+font-size: 16px;
+line-height: 1.25;
+color: rgba(25, 26, 21, 0.5);
+}
+
+.moreButton{
+font-weight: 500;
+font-size: 16px;
+line-height: 1.5;
+text-decoration: underline;
+text-decoration-skip-ink: none;
+color: #191a15;
+background: transparent;
+border: none;
+padding: 0;
+}
+
+.commentatorWrapper{
+    margin-top: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.commentSection{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.commentator{
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.avatar{
+    border-radius: 100px;
+width: 44px;
+height: 44px;
+background: rgba(252, 131, 44, 0.2);
+display: flex;
+align-items: center;
+justify-content: center;
+font-weight: 500;
+font-size: 20px;
+line-height: 1.0;
+color: #fc832c;
+}
+
+.commentatorInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.commentatorName{
+font-weight: 500;
+font-size: 16px;
+line-height: 1.25;
+color: #191a15;
+}
+
+.commentatorRating{
+font-weight: 500;
+font-size: 14px;
+line-height: 1.29;
+color: #191a15;
+}
+
+.iconWrapper{
+    display: flex;
+    gap: 8px;
+}
+
+.commentText{
+font-weight: 400;
+font-size: 16px;
+line-height: 1.25;
+color: rgba(25, 26, 21, 0.5);
+}
+
+.appointmentBtn{
+    border-radius: 30px;
+padding: 14px 32px;
+max-width: 230px;
+margin-top: 40px;
+}

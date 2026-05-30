@@ -132,3 +132,9 @@ font-weight: 700;
 font-size: 24px;
 color: #fbfbfb;
 }
+
+.loaderWrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

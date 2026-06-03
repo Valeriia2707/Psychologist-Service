@@ -91,6 +91,12 @@ top: 50%;
 stroke: #191a15;
 }
 
+.iconHeartFavorite{
+    fill: #fc832c;
+stroke-width: 2px;
+stroke: #fc832c;
+}
+
 .priceText{
 font-weight: 500;
 font-size: 16px;

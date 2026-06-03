@@ -1,16 +1,16 @@
 'use client'
 
+import { useAuthStore } from "@/lib/store/useAuthStore";
+import AuthHeader from "../AuthHeader/AuthHeader";
 import css from "./Header.module.css";
-import Button from "../ui/Button/Button";
 import Link from "next/link";
-import { useState } from "react";
-import LoginModal from "../LoginModal/LoginModal";
-import RegisterModal from "../RegisterModal/RegisterModal";
+
 
 const Header = () => {
 
-    const [RegisterisOpen, setRegisterIsOpen] = useState(false);
-    const [LoginisOpen, setLoginIsOpen] = useState(false);
+    const user = useAuthStore((state) => state.user)
+
+   
     return (  
 <header className={css.header}>
     <div className={css.linkWrapper}>
@@ -19,15 +19,11 @@ const Header = () => {
     <ul className={css.navWrapper}>
         <li ><Link href='/' className={css.navLink}>Home</Link></li>
         <li ><Link href='/psychologists' className={css.navLink}>Psychologists</Link></li>
+        {user !== null && <li ><Link href='/favorites' className={css.navLink}>Favorites</Link></li>}
     </ul>
 </nav>
 </div>
-<div className={css.buttonWrapper}>
-    <Button variant="outline" className={css.buttonOutLine} onClick={() => setLoginIsOpen(true)}>Log In</Button>
-    {LoginisOpen && <LoginModal onClose={() => setLoginIsOpen(false)} />}
-<Button variant="solid" className={css.buttonSolid} onClick={() => setRegisterIsOpen(true)}>Registration</Button>
-{RegisterisOpen && <RegisterModal onClose={() => setRegisterIsOpen(false)} />}
-</div>
+<AuthHeader/>
 </header>
     )
 }

@@ -64,9 +64,8 @@ margin-bottom: 40px;
 .field{
     border: 1px solid rgba(25, 26, 21, 0.1);
 border-radius: 12px;
-padding: 16px 350px 16px 18px;
-max-width: 438px;
-width: 100%;
+padding: 16px 18px;
+width: 438px;
 height: 52px;
 }
 

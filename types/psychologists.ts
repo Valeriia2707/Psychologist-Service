@@ -5,6 +5,7 @@ export interface Review {
 }
 
 export interface Psychologist {
+    id: string,
     about: string,
     avatar_url: string,
     experience: string,  

@@ -1,7 +1,6 @@
 import {create} from "zustand";
 import { User } from "firebase/auth";
-import {signOut} from "firebase/auth"; 
-import {auth} from "@/lib/firebase";
+import { logout } from "../services/auth";
 
 interface UserStateProps {
 user: User | null,
@@ -15,7 +14,13 @@ export const useAuthStore = create<UserStateProps>()((set) => ({
     isAuthenticated: false,
     setUser: (user: User | null) => set({user, isAuthenticated: !!user}),
     clearAuth: async () => {
-        set({user: null, isAuthenticated: false})
-        await signOut(auth)
+        try {
+            set({user: null, isAuthenticated: false})
+        await logout();
+        }
+        catch(error){
+            console.error("There is error with logout", error);
+        }
+        
 }
 }));

@@ -47,17 +47,3 @@ line-height: 1.25;
 letter-spacing: -0.01em;
 color: #191a15;
 }
-
-.buttonWrapper{
-    display: flex;
-    gap: 8px;
-}
-
-
-.buttonOutLine{
-    padding: 14px 39px;
-}
-
-.buttonSolid{
-    padding: 14px 40px;
-}

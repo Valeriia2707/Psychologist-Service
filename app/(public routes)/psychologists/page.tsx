@@ -4,7 +4,7 @@ import Filter from "@/components/Filter/Filter";
 import { getAllPsychologists } from "@/lib/services/psychologists";
 import { Psychologist } from "@/types/psychologists";
 import Loading from "@/app/loading";
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import CardList from "@/components/CardList/CardList";
 import Button from "@/components/ui/Button/Button";
 import css from "./Psychologist.module.css"
@@ -21,62 +21,66 @@ useEffect(() => {
         try{
             const data = await getAllPsychologists();
 
-            if(data){
-                const list: Psychologist[] = Array.isArray(data) ? data : Object.keys(data).map(key => ({id: key, ...data[key]}));
+                const list: Psychologist[] = Array.isArray(data) ? data.map((item, index) => ({id: String(index), ...item})) : Object.keys(data).map(key => ({id: key, ...data[key]}));
                 setPsychologists(list)
-            }
         }
         catch(err) {
             console.error(err);
             
         }
-        setIsLoading(false);
+        finally{
+            setIsLoading(false);
+        }
     }
 
     loadData();
 
 }, [])
 
-
 const handleFilter = (option: string) => {
     setActiveFilter(option);
     setLimit(3);
 }
 
-let copyPsychologist = [...psychologists];
+const processedArray = useMemo(() => {
 
-switch (activeFilter) {
+    
+
+    switch (activeFilter) {
     case 'title_asc':
-        copyPsychologist = copyPsychologist.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        return [...psychologists].sort((a, b) => a.name.localeCompare(b.name));
     case 'title_desc':
-        copyPsychologist = copyPsychologist.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        return [...psychologists].sort((a, b) => b.name.localeCompare(a.name));
     case 'cheaper_price':
-        copyPsychologist = copyPsychologist.filter((items) => items.price_per_hour < 10);
-        break;
+        return psychologists.filter((item) => item.price_per_hour <= 10);
     case 'exp_price':
-        copyPsychologist = copyPsychologist.filter((items) => items.price_per_hour > 10);
-        break;
+        return psychologists.filter((item) => item.price_per_hour >= 10);
     case 'popular':
-        copyPsychologist = copyPsychologist.sort((a, b) => b.rating - a.rating);
-        break;
+        return [...psychologists].sort((a, b) => b.rating - a.rating);
     case 'non_popular':
-        copyPsychologist = copyPsychologist.sort((a, b) => a.rating - b.rating);
-        break;
-    default:
-        break;
-}
+        return [...psychologists].sort((a, b) => a.rating - b.rating);
+    default: return psychologists;
+    }
 
-const visiblePsychologist = copyPsychologist.slice(0, limit);
+}, [activeFilter, psychologists])
+
+
+
+
+
+
+const visiblePsychologist = processedArray.slice(0, limit);
+
+if (isLoading) {
+    return <Loading />;
+}
 
 
 return(
     <div className={css.container}>
-        {isLoading && <Loading/>}
         <Filter value={activeFilter} onChange={handleFilter}/>
         <CardList items={visiblePsychologist}/>
-        { copyPsychologist.length > limit && <Button className={css.button} variant="solid" onClick={() => setLimit(prev => prev + 3)}>Load more</Button>}
+        { processedArray.length > limit && <Button className={css.button} variant="solid" onClick={() => setLimit(prev => prev + 3)}>Load more</Button>}
     </div>
 )
 

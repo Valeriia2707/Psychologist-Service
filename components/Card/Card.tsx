@@ -2,8 +2,12 @@ import css from "./Card.module.css";
 import { Psychologist } from "@/types/psychologists";
 import Image from "next/image";
 import Icon from "../ui/Icon/Icon";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Button from "../ui/Button/Button";
+import AppointmentModal from "../AppointmentModal/AppointmentModal";
+import { useAuthStore } from "@/lib/store/useAuthStore";
+import { useFavoritesStore } from "@/lib/store/useFavoritesStore";
+import RegisterModal from "../RegisterModal/RegisterModal";
 
 interface CardProps {
     psychologist: Psychologist;
@@ -12,6 +16,30 @@ interface CardProps {
 const Card = ({psychologist}: CardProps) => {
 
 const [isExpand, setIsExpand] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
+const [selectedTime, setSelectedTime] = useState<string>("");
+const [isModalOpen, setIsModalOpen] = useState(false)
+
+const user = useAuthStore((state) => state.user);
+const favorites = useFavoritesStore((state) => state.items);
+const toggleFavorites = useFavoritesStore((state) => state.toggleFavorites);
+const isFavorite = !!favorites[psychologist.id]
+
+const handleHeart = () => {
+    if (user === null){
+        setIsModalOpen(true);        
+    } else {
+        toggleFavorites(user.uid, psychologist.id, isFavorite, psychologist)
+    }    
+}
+
+const handleModalCloseRegister = useCallback(() => {
+    setIsModalOpen(false)
+}, [])
+
+const handleModalCloseAppointment = useCallback(() => {
+    setIsOpen(false)
+}, [])
 
 return(
     <div className={css.cardWrapper}>
@@ -32,7 +60,9 @@ return(
                     <p className={css.priceText}>Price / 1 hour: <span className={css.priceSpan}>{psychologist.price_per_hour}$</span></p>
                     </div>
                     </div>
-                    <Icon name="icon-heart" width={26} height={26} className={css.iconHeart}/>
+                    <Icon name="icon-heart"  width={26} height={26} className={`${css.iconHeart} ${isFavorite ? css.iconHeartFavorite : ''}`}
+                    onClick={handleHeart}
+                    />
                 </div>
             </div>
             <div className={css.secondContainer}>
@@ -68,9 +98,11 @@ return(
             </div>
         ))}
         </div>
-        <Button className={css.appointmentBtn} variant="solid">{'Make an appointment'}</Button>
+        <Button className={css.appointmentBtn} onClick={ () => setIsOpen(true)} variant="solid">{'Make an appointment'}</Button>
+        {isOpen && <AppointmentModal onClose={handleModalCloseAppointment} psychologist={psychologist} onChange={setSelectedTime} value={selectedTime}/>}
         </>)
     }
+    {isModalOpen && <RegisterModal onClose={handleModalCloseRegister}/>}
         </div>
     </div>
 )

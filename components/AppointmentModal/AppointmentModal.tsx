@@ -3,34 +3,69 @@ import Icon from "../ui/Icon/Icon";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Button from "../ui/Button/Button";
+import { Psychologist } from "@/types/psychologists";
+import { handleTime } from "@/utils/timer";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { addAppointment } from "@/lib/services/appointments";
+import { createPortal } from "react-dom";
+import {memo} from 'react';
+import { FirebaseError } from "firebase/app";
+
+const AppointmentSchema = yup.object({
+    name: yup.string().required(),
+    phone: yup.string().min(9).max(9).matches(/^[0-9]+$/).required(),
+    time: yup.string().required(),
+    email: yup.string().email().required(),
+    comment: yup.string().default('')
+})
 
 interface ModalProps {
-
+    readonly value: string,
+    onChange: (value: string) => void
     onClose: () => void
+    psychologist: Psychologist
 }
 
 interface AppointmentFormData {
     name: string,
-    phone: number,
+    phone: string,
     time: string,
     email: string,
-    comment: string
+    comment: string,
 }
 
-interface Option {
-    value: string,
-    label: string
-}
+const timeOptions = handleTime();
 
-const AppointmentModal = ({onClose}:ModalProps ) => {
+const AppointmentModal = ({value, onChange, onClose, psychologist}:ModalProps ) => {
 
 const [isOpen, setIsOpen] = useState(false);
+const [error, setError] = useState('')
 
-const [isVisible, setIsVisible] = useState(false)
+const {register, handleSubmit, setValue, formState: {errors}} = useForm({
+        resolver: yupResolver(AppointmentSchema)
+    })
 
-    const toggleVisibility = () => {
-        setIsVisible(!isVisible);
-    }
+    const handleFormSubmit = async (data: AppointmentFormData) => {
+    
+            try{
+                setError('')
+                await addAppointment({...data, psychologistId: psychologist.id, psychologistName: psychologist.name});
+                onClose();
+            }
+    
+            catch(error){         
+                        let userMessage = "Something went wrong. Please try again later";
+            
+                if (error instanceof FirebaseError) {
+                    userMessage = "Failed to schedule an appointment. Please try again"
+                }
+            
+                setError(userMessage);
+                    }
+    
+        }
 
 
     const handleBackDropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -55,73 +90,75 @@ const [isVisible, setIsVisible] = useState(false)
         }
     }, [onClose])
 
-    const sortOptions: Option[] = [
-    {value: "title_asc", label: "A to Z"},
-    {value: "title_desc", label: "Z to A"},
-    {value: "cheaper_price", label: "Less than 10$"},
-    {value: "exp_price", label: "Greater than 10$"},
-    {value: "popular", label: "Popular"},
-    {value: "non_popular", label: "Not popular"},
-    {value: "all", label: "Show all"},
-]
 
-return(
+return createPortal(
     <div className={css.overlay} onClick={handleBackDropClick}>
-    <div className={css.modal}>
-        <button className={css.closeButton} onClick={onClose}>
+        <div className={css.modal}>
+            <button className={css.closeButton} onClick={onClose}>
             <Icon name="icon-x" width={32} height={32} className={css.closeIcon}/>
-        </button>
-        <div className={css.textWrapper}>
-            <p>Make an appointment with a psychologists</p>
-            <p>You are on the verge of changing your life for the better. Fill out the short form below to book your personal appointment with a professional psychologist. We guarantee confidentiality and respect for your privacy.</p>
-        </div>
-        <div className={css.psychologistWrapper}>
-            <div className={css.avatarWrapper}>
-                <Image src={} alt="psychologist avatar" width={44} height={44} />
+            </button>
+            <div className={css.textWrapper}>
+                <p className={css.heading}>Make an appointment with a psychologists</p>
+                <p className={css.secondHeading}>You are on the verge of changing your life for the better. Fill out the short form below to book your personal appointment with a professional psychologist. We guarantee confidentiality and respect for your privacy.</p>
             </div>
-            <div className={css.avatarTextWrapper}>
-                <p>Your psychologists</p>
-                <p>Dr. Sarah Davis</p>
+            <div className={css.psychologistWrapper}>
+                <div >
+                    <Image className={css.avatarWrapper} src={psychologist.avatar_url} alt="psychologist avatar" width={44} height={44} />
+                </div>
+                <div className={css.avatarTextWrapper}>
+                    <p className={css.firstText}>Your psychologists</p>
+                    <p className={css.secondText}>{psychologist.name}</p>
+                </div>
             </div>
-        </div>
-        <div className={css.inputWrapper}>
-            <form>
-                <input type="text" placeholder="Name" className={css.field}/>
-                <div className={css.phoneTimeInput}>
-                    <input type="text" placeholder="+380" className={css.field}/>
-                    <div className={css.iconWrapper}>
-                    <input type="text" placeholder="00:00" className={css.field}/>
-                    <Icon name="icon-clock" width={20} height={20} className={css.clockIcon}/>
-                    </div>
-                    {isOpen && (
-                <div className={css.optionList}>
-                    {sortOptions.map(opt => {
-                        const isActive = opt.value === value
-                        return (
-                            <button 
-                            type="button" 
-                            key={opt.value} 
-                            className={`${css.optionBtn} ${isActive ? css.activeOpt : ""}`}
-                            onClick={() => {
-                                onChange(opt.value);
+            <div>
+                <form className={css.inputWrapper} onSubmit={handleSubmit(handleFormSubmit)}>
+                    <input {...register("name")} type="text" placeholder="Name" className={css.field}/>
+                    {errors.name && <p>{errors.name.message}</p>}
+                    <div className={css.phoneTimeInput}>
+                        <input {...register('phone')} type="text" placeholder="+380" className={css.secondfield}/>
+                        {errors.phone && <p>{errors.phone.message}</p>}
+                        <div className={css.iconWrapper}>
+                            <input onClick={() => setIsOpen(!isOpen)} type="text" placeholder="00:00" value={value} readOnly className={css.secondfield}/>
+                            {errors.time && <p>{errors.time.message}</p>}
+                            <Icon onClick={() => setIsOpen(!isOpen)} name="icon-clock" width={20} height={20} className={css.clockIcon}/>
+                        </div>
+                            {isOpen && (
+                            <div className={css.optionList}>
+                                <p className={css.timeText}>Meeting time</p>
+                                <div className={css.options}>
+                                {timeOptions.map(opt => {
+                                const isActive = opt === value
+                                return (
+                                <button 
+                                type="button" 
+                                key={opt} 
+                                className={`${css.optionBtn} ${isActive ? css.activeOpt : ""}`}
+                                onClick={() => {
+                                onChange(opt);
+                                setValue("time", opt, { shouldValidate: true });
                                 setIsOpen(false)
-                            }}
-                            >
-                                {opt.label}
-                            </button>
-                        )
-                        })}
-                </div>
-            )}
-                    <input type="text" placeholder="Email"/>
-                    <textarea name="Comment">Comment</textarea>
-                </div>
-            </form>
+                                }}
+                                >
+                                {opt}
+                                </button>
+                                )
+                                })}
+                                </div>
+                            </div>
+                            )}
+                    </div>
+                        <input {...register('email')} type="email" placeholder="Email" className={css.field}/>
+                        {errors.email && <p>{errors.email.message}</p>}
+                        <textarea {...register('comment')} name="comment" className={css.thirdfield} placeholder="Comment"></textarea>
+                        {errors.comment && <p>{errors.comment.message}</p>}
+                    <Button variant="solid" className={css.btn}>Send</Button>
+                    {error && <p>{error}</p>}
+                </form>
+            </div>
         </div>
-        <Button variant="solid">Send</Button>
-        </div>
-        </div>
+    </div>, document.body
 )
 }
 
-export default AppointmentModal;
+export default memo(AppointmentModal);
+

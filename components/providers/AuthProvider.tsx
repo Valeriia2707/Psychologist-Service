@@ -13,40 +13,38 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     const [isLoading, setIsLoading] = useState(true);
     const setUser = useAuthStore((state) => state.setUser);
+    const user = useAuthStore((state) => state.user);
     const clearAuth = useAuthStore((state) => state.clearAuth);
 
     const pathname = usePathname();
     const router = useRouter()
 
     useEffect(() => {
-        const isPrivateRoute = pathname.startsWith('/favorites');
-
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    if (currentUser) {
-      setUser(currentUser);
-    } else {
-      clearAuth();
+            if (currentUser) {
+                setUser(currentUser);
+            } else {
+                clearAuth();
+            }
+            setIsLoading(false);
+        });
 
-      if (isPrivateRoute) {
-        router.push("/login");
-      }
-    }
-    setIsLoading(false);
-  });
+        return () => unsubscribe();
+    }, [setUser, clearAuth]);
 
-  return () => {
-    unsubscribe();
-  };
-
-    }, [setUser, clearAuth, router, pathname]);
+    useEffect(() => {
+        const isPrivateRoute = pathname.startsWith('/favorites');
+        
+        if (!isLoading && !user && isPrivateRoute) {
+            router.push("/psychologists");
+        }
+    }, [pathname, isLoading, user, router]);
 
     if (isLoading) {
-    return (
-      <Loader/>
-    );
-  };
+        return <Loader />;
+    }
 
-  return <>{children}</>
+    return <>{children}</>;
 
 }
 

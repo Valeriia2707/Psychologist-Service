@@ -6,12 +6,13 @@ import Icon from "../ui/Icon/Icon";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import css from "./LoginModal.module.css"
+import css from "./RegisterModal.module.css"
 import { useEffect, useState } from "react";
-import { login } from "@/lib/services/auth";
-import { FirebaseError } from "firebase/app";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
-const loginSchema = yup.object({
+const registerSchema = yup.object({
+    name: yup.string().required(),
     email: yup.string().email().required(),
     password: yup.string().min(6).required()
 })
@@ -20,47 +21,35 @@ interface ModalProps {
     onClose: () => void
 }
 
-interface LoginFormData {
+interface RegisterFormData {
+    name: string,
     email: string,
     password: string
 }
 
-const LoginModal = ({onClose}: ModalProps) => {
+const RegisterModal = ({onClose}: ModalProps) => {
 
-    const [isVisible, setIsVisible] = useState(false);
-    const [error, setError] = useState('');
+    const [isVisible, setIsVisible] = useState(false)
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
     }
 
     const {register, handleSubmit, formState: {errors}} = useForm({
-        resolver: yupResolver(loginSchema)
+        resolver: yupResolver(registerSchema)
     })
 
-    const handleFormSubmit = async (data: LoginFormData) => {
+    const handleFormSubmit = async (data: RegisterFormData) => {
 
         try{
-            setError('')
-            await login( data.email, data.password);
+            await createUserWithEmailAndPassword(auth, data.email, data.password);
+            await updateProfile(auth.currentUser!, {displayName: data.name})
             onClose();
         }
 
-        catch(error){         
-            let userMessage = "Something went wrong. Please try again later";
-
-    if (error instanceof FirebaseError) {
-        switch (error.code) {
-            case 'auth/invalid-credential':
-                userMessage = "Wrong email or password";
-                break;
-            case 'auth/too-many-requests':
-                userMessage = "Too many try. Yur IP blocked";
-                break;
-        }
-    }
-
-    setError(userMessage);
+        catch(error){
+            console.error("There is error: ", error);
+            
         }
 
     }
@@ -93,11 +82,13 @@ return createPortal(
         <button className={css.closeButton} onClick={onClose}>
             <Icon name="icon-x" width={32} height={32} className={css.closeIcon}/>
         </button>
-<h2 className={css.heading}>Log In</h2>
-<p className={css.text}>Welcome back! Please enter your credentials to access your account and continue your search for a psychologist.</p>
+<h2 className={css.heading}>Registration</h2>
+<p className={css.text}>Thank you for your interest in our platform! In order to register, we need some information. Please provide us with the following information.</p>
 <div className={css.inputWrapper}>
     <form onSubmit={handleSubmit(handleFormSubmit)} className={css.form}>
-        <input {...register("email")} type="email" placeholder="Email" className={css.field}/>
+        <input {...register("name")} type="text" placeholder="Name" className={css.field}/>
+        {errors.name && <p>{errors.name.message}</p>}
+        <input {...register("email")} type="text" placeholder="Email" className={css.field}/>
         {errors.email && <p>{errors.email.message}</p>}
         <div className={css.iconWrapper}>
             <input {...register("password")} type={isVisible ? 'text' : 'password'} placeholder="Password" className={css.field}/>
@@ -106,8 +97,7 @@ return createPortal(
             </button>
         </div>
         {errors.password && <p>{errors.password.message}</p>}
-        <Button type="submit" variant="solid" className={css.loginButton}>Log In</Button>
-        {error && <p>{error}</p>}
+        <Button type="submit" variant="solid" className={css.loginButton}>Sign Up</Button>
     </form>
 </div>
     </div>
@@ -115,4 +105,4 @@ return createPortal(
 )
 }
 
-export default LoginModal;
+export default RegisterModal;

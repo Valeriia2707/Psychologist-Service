@@ -1,0 +1,38 @@
+.login{
+    display: flex;
+    gap: 8px;
+}
+
+
+.buttonOutLine{
+    padding: 14px 39px;
+}
+
+.buttonSolid{
+    padding: 14px 40px;
+}
+
+.logout{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+}
+
+.userProfile{
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar{
+    border-radius: 10px;
+width: 40px;
+height: 40px;
+background: #fc832c;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+

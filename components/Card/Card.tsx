@@ -7,7 +7,7 @@ import Button from "../ui/Button/Button";
 import AppointmentModal from "../AppointmentModal/AppointmentModal";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { useFavoritesStore } from "@/lib/store/useFavoritesStore";
-import RegisterModal from "../RegisterModal/RegisterModal";
+import LoginModal from "../LoginModal/LoginModal";
 
 interface CardProps {
     psychologist: Psychologist;
@@ -83,7 +83,7 @@ return(
         isExpand && (<>
             <div className={css.commentatorWrapper}>
             {psychologist.reviews.map((item, index) => (
-            <div className={css.commentSection} key={index}>
+            <div className={css.commentSection} key={item.reviewer + index}>
                 <div className={css.commentator}>
                     <div className={css.avatar}>{item.reviewer.slice(0, 1)}</div>
                     <div className={css.commentatorInfo}>
@@ -102,7 +102,7 @@ return(
         {isOpen && <AppointmentModal onClose={handleModalCloseAppointment} psychologist={psychologist} onChange={setSelectedTime} value={selectedTime}/>}
         </>)
     }
-    {isModalOpen && <RegisterModal onClose={handleModalCloseRegister}/>}
+    {isModalOpen && <LoginModal onClose={handleModalCloseRegister}/>}
         </div>
     </div>
 )

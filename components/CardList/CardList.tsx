@@ -10,8 +10,8 @@ const CardList = ({items}: ListProps) => {
 
     return(
         <div className={css.wrapper}>
-            {items.map((item, index) => {
-                return <Card key={index} psychologist={item}/>
+            {items.map((item) => {
+                return <Card key={item.id} psychologist={item}/>
             })}
         </div>
     )

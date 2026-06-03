@@ -3,7 +3,7 @@ import {db} from "../firebase";
 
 export const getAllPsychologists = async () => {
     try{
-        const psychologistsRef = ref(db, '/');
+        const psychologistsRef = ref(db, '/psychologists');
         const snapshot = await get(psychologistsRef);
 
         if(snapshot.exists()){

@@ -8,8 +8,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import css from "./RegisterModal.module.css"
 import { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { registration } from "@/lib/services/auth";
+import { FirebaseError } from "firebase/app";
 
 const registerSchema = yup.object({
     name: yup.string().required(),
@@ -29,7 +29,8 @@ interface RegisterFormData {
 
 const RegisterModal = ({onClose}: ModalProps) => {
 
-    const [isVisible, setIsVisible] = useState(false)
+    const [isVisible, setIsVisible] = useState(false);
+    const [error, setError] = useState("")
 
     const toggleVisibility = () => {
         setIsVisible(!isVisible);
@@ -42,15 +43,27 @@ const RegisterModal = ({onClose}: ModalProps) => {
     const handleFormSubmit = async (data: RegisterFormData) => {
 
         try{
-            await createUserWithEmailAndPassword(auth, data.email, data.password);
-            await updateProfile(auth.currentUser!, {displayName: data.name})
+            setError('')
+            await registration(data.name, data.email, data.password)
             onClose();
         }
 
-        catch(error){
-            console.error("There is error: ", error);
-            
-        }
+       catch(error){         
+                   let userMessage = "Something went wrong. Please try again later";
+       
+           if (error instanceof FirebaseError) {
+               switch (error.code) {
+                   case 'auth/email-already-in-use':
+                       userMessage = "This account already exists";
+                       break;
+                   case 'auth/too-many-requests':
+                       userMessage = "Too many try. Your IP blocked";
+                       break;
+               }
+           }
+       
+           setError(userMessage);
+               }
 
     }
 
@@ -88,7 +101,7 @@ return createPortal(
     <form onSubmit={handleSubmit(handleFormSubmit)} className={css.form}>
         <input {...register("name")} type="text" placeholder="Name" className={css.field}/>
         {errors.name && <p>{errors.name.message}</p>}
-        <input {...register("email")} type="text" placeholder="Email" className={css.field}/>
+        <input {...register("email")} type="email" placeholder="Email" className={css.field}/>
         {errors.email && <p>{errors.email.message}</p>}
         <div className={css.iconWrapper}>
             <input {...register("password")} type={isVisible ? 'text' : 'password'} placeholder="Password" className={css.field}/>
@@ -98,6 +111,7 @@ return createPortal(
         </div>
         {errors.password && <p>{errors.password.message}</p>}
         <Button type="submit" variant="solid" className={css.loginButton}>Sign Up</Button>
+        {error && <p>{error}</p>}
     </form>
 </div>
     </div>

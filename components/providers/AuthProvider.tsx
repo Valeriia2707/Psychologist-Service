@@ -4,9 +4,10 @@ import { useAuthStore } from "@/lib/store/useAuthStore"
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {onAuthStateChanged} from "firebase/auth";
+import {onIdTokenChanged} from "firebase/auth";
 import {auth} from "@/lib/firebase";
-import Loader from "@/app/loading"
+import Loader from "@/app/loading";
+import Cookies from "js-cookie";
 
 
 const AuthProvider = ({children}: {children: React.ReactNode}) => {
@@ -20,11 +21,18 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const router = useRouter()
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onIdTokenChanged(auth, async (currentUser) => {
             if (currentUser) {
+                const newToken = await currentUser.getIdToken();
+                Cookies.set("session_token", newToken, {
+            expires: 7,
+            secure: true,
+            sameSite: 'strict'
+        });
                 setUser(currentUser);
             } else {
-                clearAuth();
+                setUser(null);
+                Cookies.remove('session_token')
             }
             setIsLoading(false);
         });
@@ -36,7 +44,7 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
         const isPrivateRoute = pathname.startsWith('/favorites');
         
         if (!isLoading && !user && isPrivateRoute) {
-            router.push("/psychologists");
+            router.push("/");
         }
     }, [pathname, isLoading, user, router]);
 

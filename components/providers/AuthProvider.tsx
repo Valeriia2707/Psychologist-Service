@@ -8,6 +8,8 @@ import {onIdTokenChanged} from "firebase/auth";
 import {auth} from "@/lib/firebase";
 import Loader from "@/app/loading";
 import Cookies from "js-cookie";
+import { useFavoritesStore } from "@/lib/store/useFavoritesStore";
+import { getFavorites } from "@/lib/services/favorites";
 
 
 const AuthProvider = ({children}: {children: React.ReactNode}) => {
@@ -16,6 +18,8 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
     const setUser = useAuthStore((state) => state.setUser);
     const user = useAuthStore((state) => state.user);
     const clearAuth = useAuthStore((state) => state.clearAuth);
+    const clearFavorites = useFavoritesStore((state) => state.clearFavorites);
+    const setFavorites = useFavoritesStore((state) => state.setFavorites);
 
     const pathname = usePathname();
     const router = useRouter()
@@ -30,15 +34,18 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
             sameSite: 'strict'
         });
                 setUser(currentUser);
+                const userFavorites = await getFavorites(currentUser.uid);
+                setFavorites(userFavorites);
             } else {
                 setUser(null);
+                clearFavorites();
                 Cookies.remove('session_token')
             }
             setIsLoading(false);
         });
 
         return () => unsubscribe();
-    }, [setUser, clearAuth]);
+    }, [setUser, clearAuth, clearFavorites, setFavorites]);
 
     useEffect(() => {
         const isPrivateRoute = pathname.startsWith('/favorites');

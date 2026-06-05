@@ -6,10 +6,12 @@
 
 .buttonOutLine{
     padding: 14px 39px;
+    cursor: pointer;
 }
 
 .buttonSolid{
     padding: 14px 40px;
+    cursor: pointer;
 }
 
 .logout{

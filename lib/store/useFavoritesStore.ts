@@ -6,6 +6,7 @@ interface FavoritesProps {
     items: Record<string, Psychologist>,
     isLoading: boolean,
     error: string | null,
+    setFavorites: (favoritesData: Record<string, Psychologist>) => void,
     fetchFavorites: (userId: string) => Promise<void>,
     toggleFavorites: (userId: string, psychologistId: string, isFavorite: boolean, psychologistData: Psychologist) => Promise<void>,
     clearFavorites: () => void
@@ -15,6 +16,7 @@ export const useFavoritesStore = create<FavoritesProps>()((set, get) => ({
 items: {},
 isLoading: false,
 error: null,
+setFavorites: (favoritesData) => set({items: favoritesData || {}}),
 fetchFavorites: async(userId: string) =>
     {
         set({ isLoading: true, error: null });

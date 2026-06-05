@@ -27,6 +27,7 @@ right: 20px;
 background: transparent;
 outline: none;
 border: none;
+cursor: pointer;
 }
 
 .closeIcon{
@@ -197,4 +198,5 @@ overflow-y: hidden;
 .btn{
     padding: 16px 217px;
     margin-top: 40px;
+    cursor: pointer;
 }

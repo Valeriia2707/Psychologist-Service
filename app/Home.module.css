@@ -49,6 +49,19 @@ margin-bottom: 40px;
 
 .buttonSolid{
     padding: 18px 50px;
+     background: #fc832c;
+    font-family: var(--font-family);
+font-weight: 500;
+font-size: 20px;
+line-height: 1.2;
+letter-spacing: -0.01em;
+color: #fbfbfb;
+border: 1px solid #fc832c;
+max-width: 240px;
+display: inline-flex;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
 }
 
 .iconArrow{

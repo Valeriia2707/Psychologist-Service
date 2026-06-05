@@ -89,12 +89,14 @@ top: 50%;
     fill: none;
     stroke-width: 2px;
 stroke: #191a15;
+cursor: pointer;
 }
 
 .iconHeartFavorite{
     fill: #fc832c;
 stroke-width: 2px;
 stroke: #fc832c;
+cursor: pointer;
 }
 
 .priceText{
@@ -237,4 +239,5 @@ color: rgba(25, 26, 21, 0.5);
 padding: 14px 32px;
 max-width: 230px;
 margin-top: 40px;
+cursor: pointer;
 }

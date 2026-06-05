@@ -27,6 +27,7 @@ right: 20px;
 background: transparent;
 outline: none;
 border: none;
+cursor: pointer;
 }
 
 .closeIcon{
@@ -93,4 +94,5 @@ border: none;
 .loginButton{
     border-radius: 30px;
 padding: 16px 194px;
+cursor: pointer;
 }
